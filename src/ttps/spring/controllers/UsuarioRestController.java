@@ -26,7 +26,7 @@ public class UsuarioRestController {
 	public ResponseEntity<List<Usuario>> listAllUser(){
 		List<Usuario> users = usuarioService.listar();
 		if(users.isEmpty()) {
-			return new ResponseEntity<List<Usuario>>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<Usuario>>(users, HttpStatus.OK);
 	}
@@ -38,7 +38,7 @@ public class UsuarioRestController {
 		Usuario user = usuarioService.recuperarPorId(id);
 		if (user == null) {
 			System.out.println("Usuario con id "+ id + " no encontrado");
-			return new ResponseEntity<Usuario>(HttpStatus.NOT_FOUND);		
+			return new ResponseEntity("Usuario con id "+ id + " no encontrado", HttpStatus.NOT_FOUND);		
 		}
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);
 	}

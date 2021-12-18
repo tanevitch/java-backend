@@ -1,6 +1,7 @@
 package ttps.spring.model;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "reserva")
@@ -23,10 +28,12 @@ public class Reserva {
 	private String email;
 	@Column(nullable=false)
 	private String telefono;
-	@Column(nullable=false)
+	@Column(nullable=true)
 	private String detalle;
 	@Column(nullable=false)
-	private LocalDate fechaHora;
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern="yyyy-MM-dd'T'HH:mm")
+	private Date fechaHora;
 	
 	@ManyToOne
     @JoinColumn(nullable=false)
@@ -45,7 +52,7 @@ public class Reserva {
 	private FormaDePago formaDePago;
 	
 	@OneToOne
-	@JoinColumn(nullable=false)
+	@JoinColumn(nullable=true)
 	private CambioDeEstado cambioDeEstado;
 	
 	
@@ -53,7 +60,7 @@ public class Reserva {
 		
 	}
 	
-	public Reserva(String email, String telefono, String detalle, LocalDate fechaHora, Usuario usuario, Evento evento,
+	public Reserva(String email, String telefono, String detalle, Date fechaHora, Usuario usuario, Evento evento,
 			FormaDePago formaDePago, CambioDeEstado cambioDeEstado) {
 		this.email = email;
 		this.telefono = telefono;
@@ -80,10 +87,10 @@ public class Reserva {
 	public void setDetalle(String detalle) {
 		this.detalle = detalle;
 	}
-	public LocalDate getFechaHora() {
+	public Date getFechaHora() {
 		return fechaHora;
 	}
-	public void setFechaHora(LocalDate fechaHora) {
+	public void setFechaHora(Date fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 	public Evento getEvento() {
@@ -110,6 +117,27 @@ public class Reserva {
 	public Usuario getUsuario() {
 		return usuario;
 	}
-	
+
+	public boolean hasEmptyFields() {
+		return email.equals("")
+				|| telefono.equals("")
+				|| servicio == null
+				|| evento == null
+				|| usuario == null;
+	}
+
+	public Servicio getServicio() {
+		return servicio;
+	}
+
+	public void setServicio(Servicio servicio) {
+		this.servicio = servicio;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+
 	
 }

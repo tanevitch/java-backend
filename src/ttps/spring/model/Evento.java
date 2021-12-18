@@ -1,5 +1,6 @@
 package ttps.spring.model;
 
+import java.util.Date;
 import java.time.LocalDate;
 
 import javax.persistence.Column;
@@ -12,6 +13,10 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 @Entity
 @Table(name = "evento")
@@ -23,7 +28,9 @@ public class Evento {
 	@Column(nullable=false)
 	private String nombre;
 	@Column(nullable=false)
-	private LocalDate fechaHora;
+	@Temporal(TemporalType.TIMESTAMP)
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+    private Date fechaHora;
 	@Column(nullable=false)
 	private String direccion;
 	@Column(nullable=false)
@@ -46,7 +53,7 @@ public class Evento {
 		
 	}
 	
-	public Evento(String nombre, LocalDate fechaHora, String direccion, String cp, String provincia,
+	public Evento(String nombre, Date fechaHora, String direccion, String cp, String provincia,
 			String geolocalizacion, Usuario usuario) {
 		this.nombre = nombre;
 		this.fechaHora = fechaHora;
@@ -64,10 +71,10 @@ public class Evento {
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
-	public LocalDate getFechaHora() {
+	public Date getFechaHora() {
 		return fechaHora;
 	}
-	public void setFechaHora(LocalDate fechaHora) {
+	public void setFechaHora(Date fechaHora) {
 		this.fechaHora = fechaHora;
 	}
 	public String getDireccion() {
@@ -110,6 +117,27 @@ public class Evento {
 	
 	public long getId() {
 		return id;
+	}
+
+	public boolean hasEmptyFields() {
+		return nombre.equals("")
+				|| fechaHora == null
+				|| direccion.equals("")
+				|| cp.equals("")
+				|| provincia.equals("")
+				|| usuario == null;
+	}
+
+	public void setBorrado(boolean estado) {
+		borrado = estado;		
+	}
+	
+	public boolean getBorrado() {
+		return borrado;
+	}
+
+	public boolean perteneceA(Usuario user) {
+		return user.getId() == usuario.getId();
 	}
 	
 	

@@ -93,7 +93,7 @@ public class ServicioRestController {
 	 Servicio servicio = servicioService.recuperarPorId(id);
 	 if (servicio == null) {
 	 System.out.println("No es posible eliminar, no se encuentra el servicio con id " + id);
-	 	return new ResponseEntity<Servicio>(HttpStatus.NOT_FOUND);
+	 	return new ResponseEntity("Servicio con id "+id+"no encontrado", HttpStatus.NOT_FOUND);
 	 }
 	 
 	 servicioService.borrar(servicio);
@@ -105,11 +105,11 @@ public class ServicioRestController {
 	public ResponseEntity<List<Servicio>> listarPorUsuario(@PathVariable("id") long id){
 		Usuario user = usuarioService.recuperarPorId(id);
 		if (user == null) {
-			return new ResponseEntity<List<Servicio>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity("Usuario con id "+id+"no encontrado", HttpStatus.NOT_FOUND);
 		}
 		List<Servicio> services = servicioService.listarPorUsuarioId(user);
 		if(services.isEmpty()) {
-			return new ResponseEntity<List<Servicio>>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
 	}	
@@ -118,11 +118,11 @@ public class ServicioRestController {
 	public ResponseEntity<List<Servicio>> listarExceptoUsuario(@PathVariable("id") long id){
 		Usuario user = usuarioService.recuperarPorId(id);
 		if (user == null) {
-			return new ResponseEntity<List<Servicio>>(HttpStatus.NOT_FOUND);
+			return new ResponseEntity("Servicio con id "+id+"no encontrado", HttpStatus.NOT_FOUND);
 		}
 		List<Servicio> services = servicioService.buscarServiciosQueNoSonDelUsuario(user);
 		if(services.isEmpty()) {
-			return new ResponseEntity<List<Servicio>>(HttpStatus.NO_CONTENT);
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
 	}

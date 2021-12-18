@@ -25,7 +25,7 @@ public class TipoServicioRestController {
 	public ResponseEntity<List<TipoServicio>> servicios(){
 		List<TipoServicio> tipos = tipoServicioService.listar();
 		if(tipos.isEmpty()) {
-			return new ResponseEntity(HttpStatus.NO_CONTENT);
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<TipoServicio>>(tipos, HttpStatus.OK);
 	}

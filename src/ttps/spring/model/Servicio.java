@@ -210,5 +210,9 @@ public class Servicio {
 	public String toString() { // se agregó para poder imprimirlos en el main más fácil
 		return "Nombre: "+nombre+ ", Desc: "+descripcion+", wsp " + whatsapp + " url" + url + " tuirer"+twitter+ " ig "+ instagram;
 	}
+
+	public boolean esOfrecidoPor(Usuario user) {
+		return user.getId() == usuario.getId();
+	}
 	
 }
