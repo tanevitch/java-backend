@@ -55,7 +55,7 @@ public class BaseDAOimpl<T> implements BaseDAO<T>{
 	@Override
 	public void eliminar(long id) {
 		T object = this.getEntityManager().find(persistentClass, id);
-		this.getEntityManager().detach(object);;
+		this.getEntityManager().detach(object);
 	}
 
 	@Override

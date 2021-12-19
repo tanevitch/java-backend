@@ -9,7 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import ttps.spring.DAO.EstadoDAO;
 import ttps.spring.DAO.ReservaDAO;
+import ttps.spring.model.Estado;
 import ttps.spring.model.Evento;
 import ttps.spring.model.Reserva;
 import ttps.spring.model.Servicio;
@@ -27,6 +29,8 @@ public class ReservaService {
 	private ServicioService servicioService;
 	@Autowired
 	private ReservaDAO reservaDAOImpl;
+	@Autowired
+	private EstadoDAO estadoDAOImpl;
 	
 	public List<Reserva> listarPorUsuarioId(Usuario user) {
 		return reservaDAOImpl.buscarReservaPorUsuario(user);
@@ -54,11 +58,27 @@ public class ReservaService {
 		if (! evento.perteneceA(user)) {
 			return new ResponseEntity("Solo pueden registrarse reservas para eventos propios", HttpStatus.BAD_REQUEST);		
 		}
-		
+		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(Estado.SINCONFIRMAR);
+		reservaNueva.setEstado(estado);
 		reservaNueva.setServicio(servicio);
 		reservaNueva.setUsuario(user);
 		reservaNueva.setEvento(evento);
 		reservaDAOImpl.guardar(reservaNueva);		
+		return new ResponseEntity(HttpStatus.OK);
+	}
+
+	public List<Reserva> listarPorServicio(Servicio servicio) {
+		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(Estado.SINCONFIRMAR);
+		return reservaDAOImpl.buscarReservaPorServicio(servicio, estado);
+	}
+
+	public Reserva recuperarPorId(long id) {
+		return reservaDAOImpl.recuperarPorId(id);
+	}
+
+	public ResponseEntity cambiarEstado(Reserva reserva, Estado estado) {
+		reserva.setEstado(estado);
+		reservaDAOImpl.editar(reserva);
 		return new ResponseEntity(HttpStatus.OK);
 	}
 

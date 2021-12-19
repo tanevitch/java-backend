@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import ttps.spring.DAO.EstadoDAO;
+import ttps.spring.model.Estado;
 import ttps.spring.model.Reserva;
 import ttps.spring.model.Servicio;
 import ttps.spring.model.Usuario;
@@ -33,6 +35,8 @@ public class ReservaRestController {
 	UserService usuarioService;
 	@Autowired
 	EventoService eventoService;
+	@Autowired
+	private EstadoDAO estadoDAOImpl;
 	
 	@GetMapping("/usuario/{id}")
 	public ResponseEntity<List<Reserva>> listarPorUsuario(@PathVariable("id") long id){
@@ -41,6 +45,19 @@ public class ReservaRestController {
 			return new ResponseEntity("Usuario con id "+id+"no encontrado", HttpStatus.NOT_FOUND);
 		}
 		List<Reserva> reservas = reservaService.listarPorUsuarioId(user);
+		if(reservas.isEmpty()) {
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Reserva>>(reservas, HttpStatus.OK);
+	}	
+	
+	@GetMapping("/servicio/{id}")
+	public ResponseEntity<List<Reserva>> listarPorServicio(@PathVariable("id") long id){
+		Servicio servicio = servicioService.recuperarPorId(id);
+		if (servicio == null) {
+			return new ResponseEntity("Servicio con id "+id+" no encontrado", HttpStatus.NOT_FOUND);
+		}
+		List<Reserva> reservas = reservaService.listarPorServicio(servicio);
 		if(reservas.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
@@ -58,5 +75,35 @@ public class ReservaRestController {
 			return codigoRta;
 		}
 		return new ResponseEntity<Reserva>(reservaNueva, HttpStatus.CREATED);
+	}
+	
+	@PostMapping("/confirmar/{id}")
+	public ResponseEntity<Reserva> confirmar(@PathVariable("id") long id){
+		Reserva reserva = reservaService.recuperarPorId(id);
+		if (reserva == null) {
+			return new ResponseEntity("Reserva con id "+id+" no encontrada", HttpStatus.NOT_FOUND);
+		}
+		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(Estado.CONFIRMADA);
+
+		ResponseEntity codigoRta =	reservaService.cambiarEstado(reserva, estado);
+		if (codigoRta.getStatusCode() != HttpStatus.OK) {
+			return codigoRta;
+		}
+		return new ResponseEntity<Reserva>(HttpStatus.OK);
+	}
+	
+	@PostMapping("/rechazar/{id}")
+	public ResponseEntity<Reserva> rechazar(@PathVariable("id") long id){
+		Reserva reserva = reservaService.recuperarPorId(id);
+		if (reserva == null) {
+			return new ResponseEntity("Reserva con id "+id+" no encontrada", HttpStatus.NOT_FOUND);
+		}
+		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(Estado.RECHAZADA);
+
+		ResponseEntity codigoRta =	reservaService.cambiarEstado(reserva, estado);
+		if (codigoRta.getStatusCode() != HttpStatus.OK) {
+			return codigoRta;
+		}
+		return new ResponseEntity<Reserva>(HttpStatus.OK);
 	}
 }

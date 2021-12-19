@@ -52,21 +52,22 @@ public class Reserva {
 	private FormaDePago formaDePago;
 	
 	@OneToOne
-	@JoinColumn(nullable=true)
-	private CambioDeEstado cambioDeEstado;
+	@JoinColumn(nullable=false)
+	private Estado estado;
 	
 	
 	public Reserva() {
-		
+		this.estado = new Estado(Estado.SINCONFIRMAR);
 	}
 	
 	public Reserva(String email, String telefono, String detalle, Date fechaHora, Usuario usuario, Evento evento,
-			FormaDePago formaDePago, CambioDeEstado cambioDeEstado) {
+			FormaDePago formaDePago) {
 		this.email = email;
 		this.telefono = telefono;
 		this.detalle = detalle;
 		this.fechaHora = fechaHora;
 		this.usuario = usuario;
+		this.estado = new Estado(Estado.SINCONFIRMAR);
 	}
 	
 	public String getEmail() {
@@ -105,12 +106,15 @@ public class Reserva {
 	public void setFormaDePago(FormaDePago formaDePago) {
 		this.formaDePago = formaDePago;
 	}
-	public CambioDeEstado getCambioDeEstado() {
-		return cambioDeEstado;
+	
+	public Estado getEstado() {
+		return estado;
 	}
-	public void setCambioDeEstado(CambioDeEstado cambioDeEstado) {
-		this.cambioDeEstado = cambioDeEstado;
+
+	public void setEstado(Estado estado) {
+		this.estado = estado;
 	}
+
 	public long getId() {
 		return id;
 	}

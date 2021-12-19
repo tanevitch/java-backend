@@ -10,6 +10,11 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "estado")
 public class Estado {
+	public static final String FINALIZADA = "FINALIZADA";
+	public static final String CONFIRMADA = "CONFIRMADA";
+	public static final String SINCONFIRMAR = "SINCONFIRMAR";
+	public static final String RECHAZADA = "RECHAZADA";
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
