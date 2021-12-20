@@ -67,8 +67,7 @@ public class ReservaService {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-	public List<Reserva> listarPorServicio(Servicio servicio) {
-		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(Estado.SINCONFIRMAR);
+	public List<Reserva> listarPorServicio(Servicio servicio, Estado estado) {
 		return reservaDAOImpl.buscarReservaPorServicio(servicio, estado);
 	}
 

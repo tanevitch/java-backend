@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,7 +13,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
 @Table(name = "tipoServicio")
@@ -24,15 +27,14 @@ public class TipoServicio {
 	@Column(nullable=false)
 	private String nombre;
 	
-	@OneToMany
-    @JoinColumn(nullable=true)
-	@JsonIgnore
-	private List<AspectoPuntuacion> aspectoAValorar = new ArrayList<AspectoPuntuacion>();
+	@OneToMany(mappedBy="tipoServicio",fetch = FetchType.EAGER)
+	@JsonManagedReference 
+	private List<AspectoPuntuacion> aspectosPuntuacion;
 
 	
 	public TipoServicio(String nombre, List<AspectoPuntuacion> aspectoAValorar) {
-		this.nombre = nombre;
-		this.aspectoAValorar = aspectoAValorar;
+		this.nombre = nombre;  
+		this.aspectosPuntuacion = aspectoAValorar;
 	}
 	
 	public TipoServicio() {
@@ -56,7 +58,7 @@ public class TipoServicio {
 	}
 
 	public List<AspectoPuntuacion> getAspectoAValorar() {
-		return aspectoAValorar;
+		return aspectosPuntuacion;
 	}
 	
 	

@@ -1,5 +1,7 @@
 package ttps.spring.controllers;
 
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ttps.spring.DAO.EstadoDAO;
@@ -22,7 +25,7 @@ import ttps.spring.services.EventoService;
 import ttps.spring.services.ReservaService;
 import ttps.spring.services.ServicioService;
 import ttps.spring.services.UserService;
-
+import java.time.ZoneId;
 @CrossOrigin
 @RestController
 @RequestMapping("/api/reservas")
@@ -52,12 +55,17 @@ public class ReservaRestController {
 	}	
 	
 	@GetMapping("/servicio/{id}")
-	public ResponseEntity<List<Reserva>> listarPorServicio(@PathVariable("id") long id){
+	public ResponseEntity<List<Reserva>> listarPorServicio(@PathVariable("id") long id,  @RequestParam String nombreEstado){
 		Servicio servicio = servicioService.recuperarPorId(id);
 		if (servicio == null) {
 			return new ResponseEntity("Servicio con id "+id+" no encontrado", HttpStatus.NOT_FOUND);
 		}
-		List<Reserva> reservas = reservaService.listarPorServicio(servicio);
+		
+		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(nombreEstado.toUpperCase());
+		if (estado == null) {
+			return new ResponseEntity("Estado "+nombreEstado+" no encontrado", HttpStatus.NOT_FOUND);
+		}
+		List<Reserva> reservas = reservaService.listarPorServicio(servicio, estado);
 		if(reservas.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
@@ -77,13 +85,21 @@ public class ReservaRestController {
 		return new ResponseEntity<Reserva>(reservaNueva, HttpStatus.CREATED);
 	}
 	
-	@PostMapping("/confirmar/{id}")
-	public ResponseEntity<Reserva> confirmar(@PathVariable("id") long id){
+	@GetMapping("/cambiar_estado/{id}")
+	public ResponseEntity<Reserva> confirmar(@PathVariable("id") long id, @RequestParam String nombreEstado){
 		Reserva reserva = reservaService.recuperarPorId(id);
 		if (reserva == null) {
 			return new ResponseEntity("Reserva con id "+id+" no encontrada", HttpStatus.NOT_FOUND);
 		}
-		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(Estado.CONFIRMADA);
+		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(nombreEstado.toUpperCase());
+		if (estado == null) {
+			return new ResponseEntity("Estado "+nombreEstado+" no encontrado", HttpStatus.NOT_FOUND);
+		}
+		
+		LocalDate.now();
+		if (estado.getNombre().equals(Estado.FINALIZADA) && reserva.getFechaHora().before(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()))) {
+			return new ResponseEntity("No se puede marcar como finalizada una reserva antes de la fecha de la reserva", HttpStatus.BAD_REQUEST);
+		}
 
 		ResponseEntity codigoRta =	reservaService.cambiarEstado(reserva, estado);
 		if (codigoRta.getStatusCode() != HttpStatus.OK) {
@@ -92,18 +108,4 @@ public class ReservaRestController {
 		return new ResponseEntity<Reserva>(HttpStatus.OK);
 	}
 	
-	@PostMapping("/rechazar/{id}")
-	public ResponseEntity<Reserva> rechazar(@PathVariable("id") long id){
-		Reserva reserva = reservaService.recuperarPorId(id);
-		if (reserva == null) {
-			return new ResponseEntity("Reserva con id "+id+" no encontrada", HttpStatus.NOT_FOUND);
-		}
-		Estado estado = estadoDAOImpl.buscarEstadoPorNombre(Estado.RECHAZADA);
-
-		ResponseEntity codigoRta =	reservaService.cambiarEstado(reserva, estado);
-		if (codigoRta.getStatusCode() != HttpStatus.OK) {
-			return codigoRta;
-		}
-		return new ResponseEntity<Reserva>(HttpStatus.OK);
-	}
 }
