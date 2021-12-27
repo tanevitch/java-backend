@@ -44,6 +44,7 @@ public class AuthRestController {
 		Map<String, String> data = new HashMap<String, String>();
 		Usuario user = usuarioService.buscarUsuarioPorMail(credenciales.get("mail"));
 		data.put("user_id", Long.toString(user.getId()));
+		data.put("name", user.getNombre());
 		data.put("email", user.getMail());
 		data.put("token", token);
 		return new ResponseEntity<Map<String, String>>(data, HttpStatus.OK);
