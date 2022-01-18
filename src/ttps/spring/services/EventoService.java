@@ -36,15 +36,12 @@ public class EventoService {
 	public ResponseEntity guardar(Evento eventoNuevo) {
 		Usuario user = usuarioService.recuperarPorId(eventoNuevo.getUsuario().getId());
 		TipoEvento te = tipoEventoDAOImpl.recuperarPorId(eventoNuevo.getTipoEvento().getId());
-
 		if (te == null) {
 			return new ResponseEntity("El tipo de evento con id "+eventoNuevo.getTipoEvento().getId()+" es inválido", HttpStatus.BAD_REQUEST);		
 		}
-		
-		
 		eventoNuevo.setTipoEvento(te);
 		eventoNuevo.setUsuario(user);
-		eventoDAOImpl.guardar(eventoNuevo);		
+		eventoDAOImpl.guardar(eventoNuevo);
 		return new ResponseEntity(HttpStatus.OK);
 	}
 

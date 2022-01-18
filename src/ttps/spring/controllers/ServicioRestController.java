@@ -1,6 +1,7 @@
 package ttps.spring.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,7 @@ public class ServicioRestController {
 		}
 		return new ResponseEntity<Servicio>(service, HttpStatus.OK);
 	}
+	
 	
 	@PostMapping("")
 	public ResponseEntity<Servicio> crear(@RequestBody Servicio serviceNuevo){
@@ -125,5 +127,14 @@ public class ServicioRestController {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
+	}
+	
+	@PostMapping("/calificar/{id}")
+	
+	public ResponseEntity<Servicio> puntuar(@PathVariable("id") long id, @RequestBody Map<String,Integer> puntuacion){
+		Servicio servicio = servicioService.recuperarPorId(id);
+		System.out.println(puntuacion.size());
+		return new ResponseEntity<Servicio>(servicio, HttpStatus.OK);
+		
 	}
 }

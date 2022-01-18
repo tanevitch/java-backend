@@ -54,10 +54,10 @@ public class EventoRestController {
 	
 	@PostMapping("")
 	public ResponseEntity<Evento> crear(@RequestBody Evento eventoNuevo){
+		System.out.println(eventoNuevo);
 		if (eventoNuevo.hasEmptyFields()){
 			 return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
 		 }
-		
 		ResponseEntity codigoRta =	eventoService.guardar(eventoNuevo);
 		if (codigoRta.getStatusCode() != HttpStatus.OK) {
 			return codigoRta;

@@ -29,7 +29,7 @@ public class Evento {
 	private String nombre;
 	@Column(nullable=false)
 	@Temporal(TemporalType.TIMESTAMP)
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss")
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm")
     private Date fechaHora;
 	@Column(nullable=false)
 	private String direccion;

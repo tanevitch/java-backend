@@ -71,7 +71,6 @@ public class ReservaRestController {
 		}
 		return new ResponseEntity<List<Reserva>>(reservas, HttpStatus.OK);
 	}	
-	
 	@PostMapping("")
 	public ResponseEntity<Reserva> crear(@RequestBody Reserva reservaNueva){
 		if (reservaNueva.hasEmptyFields()){
