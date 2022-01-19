@@ -26,6 +26,9 @@ public class Puntuacion {
     @JoinColumn(nullable=false)
 	private Servicio servicio;
 	
+	@ManyToOne
+    @JoinColumn(nullable=false)
+	private Usuario usuario;
 
 	public Puntuacion(int nota, AspectoPuntuacion aspectoPuntuacion) {
 		this.nota = nota;
@@ -63,5 +66,14 @@ public class Puntuacion {
 	public void setServicio(Servicio servicio) {
 		this.servicio = servicio;
 	}
+
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+	
 	
 }

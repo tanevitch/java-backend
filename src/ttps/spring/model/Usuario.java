@@ -40,7 +40,10 @@ public class Usuario  {
 	@JsonIgnore
 	private List<Evento> eventos;
 	
-
+	@OneToMany(mappedBy="usuario")
+	@JsonIgnore
+	private List<Puntuacion> puntuaciones;
+	
 	public Usuario(String nombre, String apellido, String mail, String contrasena) {
 		this.nombre = nombre;
 		this.apellido = apellido;
