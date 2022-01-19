@@ -5,6 +5,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -20,6 +22,11 @@ public class Puntuacion {
 	@OneToOne
 	private AspectoPuntuacion aspectoPuntuacion;
 	
+	@ManyToOne
+    @JoinColumn(nullable=false)
+	private Servicio servicio;
+	
+
 	public Puntuacion(int nota, AspectoPuntuacion aspectoPuntuacion) {
 		this.nota = nota;
 		this.aspectoPuntuacion= aspectoPuntuacion;
@@ -49,6 +56,12 @@ public class Puntuacion {
 		return id;
 	}
 	
-	
+	public Servicio getServicio() {
+		return servicio;
+	}
+
+	public void setServicio(Servicio servicio) {
+		this.servicio = servicio;
+	}
 	
 }

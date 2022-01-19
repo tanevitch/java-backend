@@ -21,9 +21,11 @@ import ttps.spring.DAO.BaseDAO;
 import ttps.spring.DAO.ServicioDAO;
 import ttps.spring.DAO.TipoServicioDAO;
 import ttps.spring.DAO.UsuarioDAO;
+import ttps.spring.model.Puntuacion;
 import ttps.spring.model.Servicio;
 import ttps.spring.model.TipoServicio;
 import ttps.spring.model.Usuario;
+import ttps.spring.services.PuntuacionService;
 import ttps.spring.services.ServicioService;
 import ttps.spring.services.UserService;
 
@@ -37,6 +39,8 @@ public class ServicioRestController {
 	ServicioService servicioService;
 	@Autowired	
 	UserService usuarioService;
+	@Autowired	
+	PuntuacionService puntuacionService;
 	
 	@GetMapping(path="")
 	public ResponseEntity<List<Servicio>> servicios(){
@@ -131,9 +135,14 @@ public class ServicioRestController {
 	
 	@PostMapping("/calificar/{id}")
 	
-	public ResponseEntity<Servicio> puntuar(@PathVariable("id") long id, @RequestBody Map<String,Integer> puntuacion){
+	public ResponseEntity<Servicio> puntuar(@PathVariable("id") long id, @RequestBody List<Puntuacion> puntuaciones){
+		
 		Servicio servicio = servicioService.recuperarPorId(id);
-		System.out.println(puntuacion.size());
+		for (Puntuacion p : puntuaciones) {
+			p.setServicio(servicio);
+			puntuacionService.guardar(p);
+		}
+		
 		return new ResponseEntity<Servicio>(servicio, HttpStatus.OK);
 		
 	}

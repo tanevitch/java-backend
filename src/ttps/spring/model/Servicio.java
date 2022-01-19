@@ -63,8 +63,7 @@ public class Servicio {
 	private List<Reserva> reservas;
 	
 
-	@OneToMany
-    @JoinColumn(nullable=false)
+	@OneToMany(mappedBy="servicio")
 	@JsonIgnore
 	private List<Puntuacion> puntuaciones;
 	
@@ -214,5 +213,6 @@ public class Servicio {
 	public boolean esOfrecidoPor(Usuario user) {
 		return user.getId() == usuario.getId();
 	}
+	
 	
 }
