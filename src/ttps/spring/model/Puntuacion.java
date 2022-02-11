@@ -29,7 +29,11 @@ public class Puntuacion {
 	@ManyToOne
     @JoinColumn(nullable=false)
 	private Usuario usuario;
-
+	
+	@OneToOne
+	@JoinColumn(nullable=false)
+	private Evento evento;
+	
 	public Puntuacion(int nota, AspectoPuntuacion aspectoPuntuacion) {
 		this.nota = nota;
 		this.aspectoPuntuacion= aspectoPuntuacion;
@@ -75,5 +79,12 @@ public class Puntuacion {
 		this.usuario = usuario;
 	}
 	
+	public Evento getEvento() {
+		return evento;
+	}
+	
+	public void setEvento(Evento evento) {
+		this.evento = evento;
+	}
 	
 }

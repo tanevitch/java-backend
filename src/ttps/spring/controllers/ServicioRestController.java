@@ -131,6 +131,8 @@ public class ServicioRestController {
 		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
 	}
 	
+
+	
 	@PostMapping("/calificar/{id}")
 	
 	public ResponseEntity<Servicio> puntuar(@PathVariable("id") long id, @RequestBody List<Puntuacion> puntuaciones){
@@ -145,8 +147,13 @@ public class ServicioRestController {
 		if (user == null) {
 			return new ResponseEntity("Usuario con id "+puntuaciones.get(0).getUsuario().getId()+"no encontrado", HttpStatus.NOT_FOUND);
 		}
-
-		// agregar que retorne 400 si existe una tupla con el mismo servicio y usuario
+		List<Puntuacion> puntuacionesBD = puntuacionService.buscarCalificacionPorServicioEventoyUsuario(id,user.getId());
+		
+		if(!puntuacionesBD.isEmpty()) {
+			return new ResponseEntity<Servicio>(servicio,HttpStatus.BAD_REQUEST);
+		}
+			
+		// agregar que retorne 400 si existe una tupla con el mismo servicio, usuario y evento
 		for (Puntuacion p : puntuaciones) {
 			p.setServicio(servicio);
 			puntuacionService.guardar(p);
