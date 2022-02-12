@@ -34,10 +34,8 @@ public class UsuarioRestController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Usuario> getUser(@PathVariable("id") long id){
-		System.out.println("Obteniendo usuario con id " + id);
 		Usuario user = usuarioService.recuperarPorId(id);
 		if (user == null) {
-			System.out.println("Usuario con id "+ id + " no encontrado");
 			return new ResponseEntity("Usuario con id "+ id + " no encontrado", HttpStatus.NOT_FOUND);		
 		}
 		return new ResponseEntity<Usuario>(user, HttpStatus.OK);

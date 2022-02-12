@@ -9,17 +9,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 @Entity
-@Table(name = "puntuacion")
+@Table(name = "puntuacion", uniqueConstraints= @UniqueConstraint(columnNames={"servicio_id", "usuario_id", "aspectoPuntuacion_id", "evento_id"}))
 public class Puntuacion {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 	@Column(nullable=false)
-	private int nota;
+	private double nota;
 	
 	@OneToOne
+	@JoinColumn(nullable=false)
 	private AspectoPuntuacion aspectoPuntuacion;
 	
 	@ManyToOne
@@ -34,7 +36,7 @@ public class Puntuacion {
 	@JoinColumn(nullable=false)
 	private Evento evento;
 	
-	public Puntuacion(int nota, AspectoPuntuacion aspectoPuntuacion) {
+	public Puntuacion(double nota, AspectoPuntuacion aspectoPuntuacion) {
 		this.nota = nota;
 		this.aspectoPuntuacion= aspectoPuntuacion;
 	}
@@ -43,7 +45,7 @@ public class Puntuacion {
 		
 	}
 
-	public int getNota() {
+	public double getNota() {
 		return nota;
 	}
 

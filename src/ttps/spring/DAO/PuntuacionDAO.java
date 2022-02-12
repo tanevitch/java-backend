@@ -9,5 +9,7 @@ import ttps.spring.model.Usuario;
 
 public interface PuntuacionDAO extends BaseDAO<Puntuacion>{
 
-	public List<Puntuacion> buscarCalificacionPorServicioEventoyUsuario(long servicioId, long usuarioId);
+	public List<Puntuacion> buscarCalificacionPorServicioEventoyUsuario(long servicioId, long usuarioId, long eventoId);
+	public List<Puntuacion> buscarCalificacionPorServicio(long servicioId);
+	
 }

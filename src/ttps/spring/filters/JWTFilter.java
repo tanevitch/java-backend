@@ -31,10 +31,7 @@ public class JWTFilter implements Filter{
 	    }
 
 		String token = req.getHeader(HttpHeaders.AUTHORIZATION);
-		System.out.println(token);
 		if (token == null || (! TokenService.validar(token))) {
-			System.out.println("Entre");
-			System.out.println();
 			HttpServletResponse res = (HttpServletResponse) response;
 			res.setStatus(HttpStatus.FORBIDDEN.value());
 			return;

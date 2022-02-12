@@ -17,13 +17,21 @@ public class PuntuacionDAOimpl extends BaseDAOimpl<Puntuacion> implements Puntua
 		super(Puntuacion.class);
 	}
 	
-	public List<Puntuacion> buscarCalificacionPorServicioEventoyUsuario(long servicioId, long usuarioId){
+	public List<Puntuacion> buscarCalificacionPorServicioEventoyUsuario(long servicioId, long usuarioId, long eventoId){
 		Query consulta = this.getEntityManager().
-				createQuery("select p from Puntuacion p WHERE p.servicio.id = :servicioId and p.usuario.id = :usuarioId")
+				createQuery("select p from Puntuacion p WHERE p.servicio.id = :servicioId and p.usuario.id = :usuarioId and p.evento.id = :eventoId")
 		 .setParameter("servicioId", servicioId)
-		 .setParameter("usuarioId", usuarioId);
+		 .setParameter("usuarioId", usuarioId)
+		 .setParameter("eventoId", eventoId);
 		 return (List<Puntuacion>)consulta.getResultList();	
 
+	}
+
+	public List<Puntuacion> buscarCalificacionPorServicio(long servicioId) {
+		Query consulta = this.getEntityManager().
+				createQuery("select p from Puntuacion p WHERE p.servicio.id = :servicioId")
+		 .setParameter("servicioId", servicioId);
+		 return (List<Puntuacion>)consulta.getResultList();	
 	}
 
 }

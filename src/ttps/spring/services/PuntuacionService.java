@@ -27,7 +27,11 @@ public class PuntuacionService {
 		return new ResponseEntity(HttpStatus.OK);
 	}
 
-	public List<Puntuacion> buscarCalificacionPorServicioEventoyUsuario(long servicioId, long usuarioId) {
-		return puntuacionDAOImpl.buscarCalificacionPorServicioEventoyUsuario(servicioId, usuarioId);
+	public List<Puntuacion> buscarCalificacionPorServicioEventoyUsuario(long servicioId, long usuarioId, long eventoId) {
+		return puntuacionDAOImpl.buscarCalificacionPorServicioEventoyUsuario(servicioId, usuarioId, eventoId);
+	}
+	
+	public List<Puntuacion> buscarCalificacionPorServicio(long servicioId){
+		return puntuacionDAOImpl.buscarCalificacionPorServicio(servicioId);
 	}
 }

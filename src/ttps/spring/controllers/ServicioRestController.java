@@ -2,6 +2,7 @@ package ttps.spring.controllers;
 
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalDouble;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,13 +18,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import ttps.spring.DAO.BaseDAO;
-import ttps.spring.DAO.ServicioDAO;
-import ttps.spring.DAO.TipoServicioDAO;
-import ttps.spring.DAO.UsuarioDAO;
 import ttps.spring.model.Puntuacion;
 import ttps.spring.model.Servicio;
-import ttps.spring.model.TipoServicio;
 import ttps.spring.model.Usuario;
 import ttps.spring.services.PuntuacionService;
 import ttps.spring.services.ServicioService;
@@ -45,6 +41,7 @@ public class ServicioRestController {
 	@GetMapping(path="")
 	public ResponseEntity<List<Servicio>> servicios(){
 		List<Servicio> services = servicioService.listar();
+		
 		if(services.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
@@ -54,10 +51,8 @@ public class ServicioRestController {
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<Servicio> servicio(@PathVariable("id") long id){
-		System.out.println("Obteniendo Servicio con id " + id);
 		Servicio service = servicioService.recuperarPorId(id);
 		if (service == null) {
-			System.out.println("Servicio con id "+ id + " no encontrado");
 			return new ResponseEntity("Servicio con id "+ id + " no encontrado", HttpStatus.NOT_FOUND);		
 		}
 		return new ResponseEntity<Servicio>(service, HttpStatus.OK);
@@ -95,10 +90,8 @@ public class ServicioRestController {
 	
 	@DeleteMapping("/{id}")
 	 public ResponseEntity<Servicio> borrar(@PathVariable("id") long id) {
-	 System.out.println("Obteniendo y eliminando el servicio con id " + id);
 	 Servicio servicio = servicioService.recuperarPorId(id);
 	 if (servicio == null) {
-	 System.out.println("No es posible eliminar, no se encuentra el servicio con id " + id);
 	 	return new ResponseEntity("Servicio con id "+id+"no encontrado", HttpStatus.NOT_FOUND);
 	 }
 	 
@@ -114,6 +107,7 @@ public class ServicioRestController {
 			return new ResponseEntity("Usuario con id "+id+"no encontrado", HttpStatus.NOT_FOUND);
 		}
 		List<Servicio> services = servicioService.listarPorUsuarioId(user);
+		
 		if(services.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
@@ -133,33 +127,5 @@ public class ServicioRestController {
 	
 
 	
-	@PostMapping("/calificar/{id}")
 	
-	public ResponseEntity<Servicio> puntuar(@PathVariable("id") long id, @RequestBody List<Puntuacion> puntuaciones){
-		
-		Servicio servicio = servicioService.recuperarPorId(id);
-		if (servicio == null) {
-			return new ResponseEntity("Servicio con id "+id+"no encontrado", HttpStatus.NOT_FOUND);
-		}
-		
-		Usuario user = usuarioService.recuperarPorId(puntuaciones.get(0).getUsuario().getId());
-		System.out.println(user);
-		if (user == null) {
-			return new ResponseEntity("Usuario con id "+puntuaciones.get(0).getUsuario().getId()+"no encontrado", HttpStatus.NOT_FOUND);
-		}
-		List<Puntuacion> puntuacionesBD = puntuacionService.buscarCalificacionPorServicioEventoyUsuario(id,user.getId());
-		
-		if(!puntuacionesBD.isEmpty()) {
-			return new ResponseEntity<Servicio>(servicio,HttpStatus.BAD_REQUEST);
-		}
-			
-		// agregar que retorne 400 si existe una tupla con el mismo servicio, usuario y evento
-		for (Puntuacion p : puntuaciones) {
-			p.setServicio(servicio);
-			puntuacionService.guardar(p);
-		}
-		
-		return new ResponseEntity<Servicio>(servicio, HttpStatus.OK);
-		
-	}
 }

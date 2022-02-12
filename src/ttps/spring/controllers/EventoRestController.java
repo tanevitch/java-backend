@@ -54,7 +54,6 @@ public class EventoRestController {
 	
 	@PostMapping("")
 	public ResponseEntity<Evento> crear(@RequestBody Evento eventoNuevo){
-		System.out.println(eventoNuevo);
 		if (eventoNuevo.hasEmptyFields()){
 			 return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
 		 }
@@ -83,7 +82,6 @@ public class EventoRestController {
 	
 	@DeleteMapping("/{id}")
 	 public ResponseEntity<Evento> borrar(@PathVariable("id") long id) {
-	 System.out.println("Obteniendo y eliminando el servicio con id " + id);
 	 Evento evento = eventoService.recuperarPorId(id);
 	 if (evento == null) {
 	 	return new ResponseEntity("Evento con id "+ id + " no encontrado", HttpStatus.NOT_FOUND);
