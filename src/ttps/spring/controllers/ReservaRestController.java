@@ -77,6 +77,10 @@ public class ReservaRestController {
 			 return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
 		 }
 		
+		if (reservaNueva.hasInvalidFields()) {
+			return new ResponseEntity("Todos los campos deben tener como máximo 255 caracteres", HttpStatus.BAD_REQUEST);
+		}
+		
 		ResponseEntity codigoRta =	reservaService.guardar(reservaNueva);
 		if (codigoRta.getStatusCode() != HttpStatus.OK) {
 			return codigoRta;

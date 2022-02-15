@@ -128,6 +128,14 @@ public class Evento {
 				|| usuario == null;
 	}
 
+	
+	public boolean hasInvalidFields() {
+		return nombre.length() > 255
+				|| direccion.length() > 255
+				|| cp.length() > 255
+				|| provincia.length() > 255;
+	}
+	
 	public void setBorrado(boolean estado) {
 		borrado = estado;		
 	}

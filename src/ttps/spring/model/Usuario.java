@@ -140,4 +140,11 @@ public class Usuario  {
 				|| contrasena.equals("");
 	}
 	
+	public boolean hasInvalidFields() {
+		return nombre.length() > 255
+			   || apellido.length() > 255
+			   || mail.length() > 255
+			   || contrasena.length() > 255;
+	}
+	
 }

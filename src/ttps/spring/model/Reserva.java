@@ -1,5 +1,6 @@
 package ttps.spring.model;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -128,6 +129,12 @@ public class Reserva {
 				|| servicio == null
 				|| evento == null
 				|| usuario == null;
+	}
+	
+	public boolean hasInvalidFields() {
+		
+		return email.length() > 255
+			|| telefono.length() > 255;
 	}
 
 	public Servicio getServicio() {

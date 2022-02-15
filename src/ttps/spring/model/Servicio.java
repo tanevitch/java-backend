@@ -208,6 +208,12 @@ public class Servicio {
 				|| foto.equals("");
 	}
 	
+	public boolean hasInvalidFields() {
+		return nombre.length() > 255
+			|| descripcion.length() > 255
+			|| whatsapp.length() > 255;
+	}
+	
 	
 	public String toString() { // se agregó para poder imprimirlos en el main más fácil
 		return "Nombre: "+nombre+ ", Desc: "+descripcion+", wsp " + whatsapp + " url" + url + " tuirer"+twitter+ " ig "+ instagram;

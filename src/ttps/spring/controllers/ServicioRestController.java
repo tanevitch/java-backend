@@ -45,6 +45,7 @@ public class ServicioRestController {
 		if(services.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
+		
 		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
 	}
 	
@@ -65,6 +66,9 @@ public class ServicioRestController {
 			 return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
 		 }
 		
+		if (serviceNuevo.hasInvalidFields()) {
+			return new ResponseEntity("Todos los campos deben tener como máximo 255 caracteres", HttpStatus.BAD_REQUEST);
+		}
 		ResponseEntity codigoRta =	servicioService.guardar(serviceNuevo);
 		if (codigoRta.getStatusCode() != HttpStatus.OK) {
 			return codigoRta;
@@ -77,6 +81,10 @@ public class ServicioRestController {
 		
 		if (serviceMod.hasEmptyFields()) {
 			return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (serviceMod.hasInvalidFields()) {
+			return new ResponseEntity("Todos los campos deben tener como máximo 255 caracteres", HttpStatus.BAD_REQUEST);
 		}
 		
 		ResponseEntity codigoRta = servicioService.editar(serviceMod, id);
@@ -126,6 +134,7 @@ public class ServicioRestController {
 	}
 	
 
+	
 	
 	
 }

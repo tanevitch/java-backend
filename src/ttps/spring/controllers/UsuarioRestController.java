@@ -47,6 +47,11 @@ public class UsuarioRestController {
 			 return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
 		 }
 		 
+		 if (userNuevo.hasInvalidFields()) {
+			 return new ResponseEntity("Todos los campos tienen como limite 255 caracteres", HttpStatus.BAD_REQUEST);
+		 }
+ 
+		 
 		 ResponseEntity codigoRta = usuarioService.crear(userNuevo);
 		 if (codigoRta.getStatusCode() != HttpStatus.OK) {
 			 return codigoRta;
@@ -64,6 +69,9 @@ public class UsuarioRestController {
 			 return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
 		 }
 
+		 if (userMod.hasInvalidFields()) {
+			 return new ResponseEntity("Todos los campos tienen como limite 255 caracteres", HttpStatus.BAD_REQUEST);
+		 }
 		 ResponseEntity codigoRta = usuarioService.editar(userMod, id);
 		 if (codigoRta.getStatusCode() != HttpStatus.OK) {
 			 return codigoRta; 

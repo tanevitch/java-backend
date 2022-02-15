@@ -39,6 +39,8 @@ public class EventoRestController {
 		if(eventos.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
+		
+		
 		return new ResponseEntity<List<Evento>>(eventos, HttpStatus.OK);
 	}
 	
@@ -57,6 +59,11 @@ public class EventoRestController {
 		if (eventoNuevo.hasEmptyFields()){
 			 return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
 		 }
+		
+		if (eventoNuevo.hasInvalidFields()) {
+			return new ResponseEntity("Todos los campos deben tener como máximo 255 caracteres", HttpStatus.BAD_REQUEST);
+		}
+		
 		ResponseEntity codigoRta =	eventoService.guardar(eventoNuevo);
 		if (codigoRta.getStatusCode() != HttpStatus.OK) {
 			return codigoRta;
@@ -69,6 +76,10 @@ public class EventoRestController {
 		
 		if (eventoMod.hasEmptyFields()) {
 			return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (eventoMod.hasInvalidFields()) {
+			return new ResponseEntity("Todos los campos deben tener como máximo 255 caracteres", HttpStatus.BAD_REQUEST);
 		}
 		
 		ResponseEntity codigoRta = eventoService.editar(eventoMod, id);
