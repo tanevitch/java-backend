@@ -97,4 +97,13 @@ public class ServicioService {
 	public List<Servicio> buscarServiciosQueNoSonDelUsuario(Usuario usuario){
 		return servicioDAOImpl.buscarServiciosQueNoSonDelUsuario(usuario);
 	}
+	
+	public List<Servicio> buscarServicioPorNombre(String nombre){
+		return servicioDAOImpl.buscarServicioPorNombre(nombre);
+	}
+	
+	public List<Servicio> buscarServicioPorCategoria(String nombre){
+		System.out.println("llegué a servicioService");
+		return servicioDAOImpl.buscarServicioPorCategoria(nombre);
+	}
 }

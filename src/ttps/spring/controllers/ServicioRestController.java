@@ -134,7 +134,25 @@ public class ServicioRestController {
 	}
 	
 
+	@GetMapping("/por_nombre/{name}")
+	public ResponseEntity<List<Servicio>> listarPorNombre(@PathVariable("name") String name){
+		List<Servicio> services = servicioService.buscarServicioPorNombre(name);
+		if(services.isEmpty()) {
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
+	}
 	
-	
+	@GetMapping("/por_categoria/{name}")
+	public ResponseEntity<List<Servicio>> listarPorCategoria(@PathVariable("name") String name){
+		System.out.println("llegué a servicioRestController");
+
+		List<Servicio> services = servicioService.buscarServicioPorCategoria(name);
+		if(services.isEmpty()) {
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
+		
+	}
 	
 }

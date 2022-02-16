@@ -41,4 +41,6 @@ public class TipoServicioRestController {
 		List<AspectoPuntuacion> aspectos = tipoServicioService.obtenerAspectosAValorar(tipo);
 		return new ResponseEntity<List<AspectoPuntuacion>>(aspectos, HttpStatus.OK);
 	}
+	
+	
 }
