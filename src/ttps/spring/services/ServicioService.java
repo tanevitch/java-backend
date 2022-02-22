@@ -98,12 +98,15 @@ public class ServicioService {
 		return servicioDAOImpl.buscarServiciosQueNoSonDelUsuario(usuario);
 	}
 	
-	public List<Servicio> buscarServicioPorNombre(String nombre){
-		return servicioDAOImpl.buscarServicioPorNombre(nombre);
+	public List<Servicio> buscarServicioPorNombre(Usuario user, String nombre){
+		return servicioDAOImpl.buscarServicioPorNombre(user, nombre);
 	}
 	
-	public List<Servicio> buscarServicioPorCategoria(String nombre){
-		System.out.println("llegué a servicioService");
-		return servicioDAOImpl.buscarServicioPorCategoria(nombre);
+	public List<Servicio> buscarServicioPorCategoria(Usuario user, String nombre){
+		return servicioDAOImpl.buscarServicioPorCategoria(user, nombre);
+	}
+	
+	public List<Servicio> buscarServicioPorNombreYCategoria(Usuario user, String nombre, String categoria){
+		return servicioDAOImpl.buscarServicioPorNombreYCategoria(user, nombre, categoria);
 	}
 }

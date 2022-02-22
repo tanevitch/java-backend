@@ -1,5 +1,6 @@
 package ttps.spring.controllers;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.OptionalDouble;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import ttps.spring.model.Puntuacion;
@@ -134,25 +136,26 @@ public class ServicioRestController {
 	}
 	
 
-	@GetMapping("/por_nombre/{name}")
-	public ResponseEntity<List<Servicio>> listarPorNombre(@PathVariable("name") String name){
-		List<Servicio> services = servicioService.buscarServicioPorNombre(name);
+	@GetMapping("/buscar")
+	public ResponseEntity<List<Servicio>> listarPorNombre(@RequestParam("nombre") String nombreServicio, @RequestParam("categoria") String idCategoria, @RequestParam("user") long idUser ){
+		List<Servicio> services = new ArrayList<Servicio>();
+		Usuario user = usuarioService.recuperarPorId(idUser);
+		System.out.println(nombreServicio+ " "+ idCategoria+ " "+ idUser);
+		if (!idCategoria.equals("") && nombreServicio.equals("")) { // si mandó la cat muestra todos de esa cat
+			services = servicioService.buscarServicioPorCategoria(user, idCategoria);
+		}
+		else if (!idCategoria.equals("") && !nombreServicio.equals("")) { //  si mandó cat y nombre aplica ambos filtros
+			services = servicioService.buscarServicioPorNombreYCategoria(user, nombreServicio, idCategoria);
+		}
+		else if (idCategoria.equals("") && !nombreServicio.equals("")) { // si mandó nombre			
+			services = servicioService.buscarServicioPorNombre(user, nombreServicio);
+		}
 		if(services.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
 	}
 	
-	@GetMapping("/por_categoria/{name}")
-	public ResponseEntity<List<Servicio>> listarPorCategoria(@PathVariable("name") String name){
-		System.out.println("llegué a servicioRestController");
 
-		List<Servicio> services = servicioService.buscarServicioPorCategoria(name);
-		if(services.isEmpty()) {
-			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
-		}
-		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
-		
-	}
 	
 }

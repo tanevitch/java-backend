@@ -23,20 +23,20 @@ public class ServicioDAOimpl extends BaseDAOimpl<Servicio> implements ServicioDA
 	}
 
 	@Override
-	public List<Servicio> buscarServicioPorNombre(String nombre) {
-		Query consulta = this.getEntityManager().createQuery("select e from Servicio e where e.nombre like concat('%',:nombre,'%') and e.borrado = 0");
-		consulta.setParameter("nombre", nombre);
+	public List<Servicio> buscarServicioPorNombre(Usuario usuario, String nombre) {
+		Query consulta = this.getEntityManager().createQuery("select e from Servicio e where e.usuario != :usuario and e.nombre like concat('%',:nombre,'%') and e.borrado = 0");
+		consulta.setParameter("nombre", nombre)
+		.setParameter("usuario", usuario);
 		return (List<Servicio>)consulta.getResultList();
 				
 	}
 
 	
 	@Override
-	public List<Servicio> buscarServicioPorCategoria(String categoria) {
-		System.out.println("llegué a ServicioDAOImpl");
-
-		Query consulta = this.getEntityManager().createQuery("select e from Servicio e INNER JOIN TipoServicio ts ON e.tipoServicio=ts.id WHERE ts.nombre = :categoria");
-		consulta.setParameter("categoria", categoria);
+	public List<Servicio> buscarServicioPorCategoria(Usuario usuario, String categoria) {
+		Query consulta = this.getEntityManager().createQuery("select e from Servicio e INNER JOIN TipoServicio ts ON e.tipoServicio=ts.id WHERE ts.id = :categoria and e.usuario != :usuario and e.borrado = 0");
+		consulta.setParameter("categoria", Long.parseLong(categoria))
+		.setParameter("usuario", usuario);
 		return (List<Servicio>)consulta.getResultList();
 	}
 	
@@ -46,6 +46,15 @@ public class ServicioDAOimpl extends BaseDAOimpl<Servicio> implements ServicioDA
 		consulta.setParameter("usuario", usuario);
 		return (List<Servicio>)consulta.getResultList();	
 		
+	}
+	
+	@Override
+	public List<Servicio> buscarServicioPorNombreYCategoria(Usuario usuario, String nombreServicio, String categoria) {
+		Query consulta = this.getEntityManager().createQuery("select e from Servicio e INNER JOIN TipoServicio ts ON e.tipoServicio=ts.id WHERE ts.id = :categoria and e.usuario != :usuario and e.borrado = 0 and e.nombre like concat('%',:nombre,'%')");
+		consulta.setParameter("categoria", Long.parseLong(categoria))
+		.setParameter("nombre", nombreServicio)
+		.setParameter("usuario", usuario);
+		return (List<Servicio>)consulta.getResultList();
 	}
 
 	@Override
