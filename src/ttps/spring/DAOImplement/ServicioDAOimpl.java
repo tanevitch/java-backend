@@ -65,5 +65,22 @@ public class ServicioDAOimpl extends BaseDAOimpl<Servicio> implements ServicioDA
 		
 	}
 	
+	@Override
+	public List serviciosMejorPuntuados(){
+		Query consulta = this.getEntityManager().createQuery("select avg(p.nota) as puntuacion, e, e.usuario from Servicio e INNER JOIN Puntuacion p ON e.id = p.servicio WHERE e.borrado = 0 GROUP BY e.id order by puntuacion desc");
+		consulta.setMaxResults(5);
+		return consulta.getResultList();	
+	}
+	
+	@Override 
+	public List<Servicio> buscarServiciosDeUsuarioEvento(Usuario usuario, Evento evento) {
+		Query consulta = this.getEntityManager().createQuery("select s from Servicio s INNER JOIN Reserva r ON s.id = r.servicio where r.usuario = :usuario and r.evento = :evento and s.borrado = 0");
+		consulta.setParameter("evento", evento)
+		.setParameter("usuario", usuario);
+		return (List<Servicio>)consulta.getResultList();
+				
+	}
+	
+	
 
 }

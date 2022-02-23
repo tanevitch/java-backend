@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import ttps.spring.DAO.ServicioDAO;
 import ttps.spring.DAO.TipoServicioDAO;
+import ttps.spring.model.Evento;
 import ttps.spring.model.Servicio;
 import ttps.spring.model.TipoServicio;
 import ttps.spring.model.Usuario;
@@ -27,6 +28,10 @@ public class ServicioService {
 
 	public List<Servicio> listar() {
 		return servicioDAOImpl.listar();
+	}
+	
+	public List mejorPuntuados() {
+		return servicioDAOImpl.serviciosMejorPuntuados();
 	}
 
 	public Servicio recuperarPorId(long id) {
@@ -104,6 +109,10 @@ public class ServicioService {
 	
 	public List<Servicio> buscarServicioPorCategoria(Usuario user, String nombre){
 		return servicioDAOImpl.buscarServicioPorCategoria(user, nombre);
+	}
+	
+	public List<Servicio> buscarServiciosDeUsuarioEvento(Usuario user, Evento evento){
+		return servicioDAOImpl.buscarServiciosDeUsuarioEvento(user, evento);
 	}
 	
 	public List<Servicio> buscarServicioPorNombreYCategoria(Usuario user, String nombre, String categoria){

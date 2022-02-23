@@ -20,10 +20,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import ttps.spring.model.Evento;
 import ttps.spring.model.Puntuacion;
+import ttps.spring.model.Reserva;
 import ttps.spring.model.Servicio;
 import ttps.spring.model.Usuario;
+import ttps.spring.services.EventoService;
 import ttps.spring.services.PuntuacionService;
+import ttps.spring.services.ReservaService;
 import ttps.spring.services.ServicioService;
 import ttps.spring.services.UserService;
 
@@ -39,6 +43,10 @@ public class ServicioRestController {
 	UserService usuarioService;
 	@Autowired	
 	PuntuacionService puntuacionService;
+	@Autowired
+	EventoService eventoService;
+	@Autowired
+	ReservaService reservaService;
 	
 	@GetMapping(path="")
 	public ResponseEntity<List<Servicio>> servicios(){
@@ -49,6 +57,18 @@ public class ServicioRestController {
 		}
 		
 		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
+	}
+	
+	@GetMapping(path="/mejorPuntuados")
+	public ResponseEntity serviciosMejorPuntuados(){
+		List services = servicioService.mejorPuntuados();
+		System.out.println(services.get(0).toString());
+		
+		if(services.isEmpty()) {
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
+		}
+		
+		return new ResponseEntity(services, HttpStatus.OK);
 	}
 	
 	
@@ -150,12 +170,28 @@ public class ServicioRestController {
 		else if (idCategoria.equals("") && !nombreServicio.equals("")) { // si mandó nombre			
 			services = servicioService.buscarServicioPorNombre(user, nombreServicio);
 		}
+		else {
+			services = servicioService.buscarServiciosQueNoSonDelUsuario(user);
+		}
+		
 		if(services.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
 		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
 	}
 	
-
+	
+	
+	@GetMapping("/buscarPorEvento")
+	public ResponseEntity<List<Servicio>> buscarPorEvento(@RequestParam("id_evento") long idEvento, @RequestParam("id_user") long userId){
+		Evento evento = eventoService.recuperarPorId(idEvento);
+		Usuario user = usuarioService.recuperarPorId(userId);
+		List<Servicio> services = servicioService.buscarServiciosDeUsuarioEvento(user, evento);
+		if(services.isEmpty()) {
+			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
+		}
+		return new ResponseEntity<List<Servicio>>(services, HttpStatus.OK);
+	}
+	
 	
 }
