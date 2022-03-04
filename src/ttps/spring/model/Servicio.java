@@ -42,7 +42,7 @@ public class Servicio {
 	private String twitter;
 	@Column(columnDefinition = "boolean default false", nullable=false)
 	private boolean borrado;
-	@Column(nullable=false)
+	@Column(columnDefinition="LONGTEXT",nullable=false)
 	private String foto;
 	
 	public String getFoto() {
