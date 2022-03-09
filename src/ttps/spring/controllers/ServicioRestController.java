@@ -62,8 +62,6 @@ public class ServicioRestController {
 	@GetMapping(path="/mejorPuntuados")
 	public ResponseEntity serviciosMejorPuntuados(){
 		List services = servicioService.mejorPuntuados();
-		System.out.println(services.get(0).toString());
-		
 		if(services.isEmpty()) {
 			return new ResponseEntity("No hay resultados", HttpStatus.NO_CONTENT);
 		}
