@@ -133,7 +133,8 @@ public class Evento {
 		return nombre.length() > 255
 				|| direccion.length() > 255
 				|| cp.length() > 255
-				|| provincia.length() > 255;
+				|| provincia.length() > 255
+				|| fechaHora.before(new Date());
 	}
 	
 	public void setBorrado(boolean estado) {

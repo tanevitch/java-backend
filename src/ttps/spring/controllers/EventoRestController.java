@@ -61,7 +61,7 @@ public class EventoRestController {
 		 }
 		
 		if (eventoNuevo.hasInvalidFields()) {
-			return new ResponseEntity("Todos los campos deben tener como máximo 255 caracteres", HttpStatus.BAD_REQUEST);
+			return new ResponseEntity("Campos inválidos", HttpStatus.BAD_REQUEST);
 		}
 		
 		ResponseEntity codigoRta =	eventoService.guardar(eventoNuevo);

@@ -74,7 +74,7 @@ public class ServicioDAOimpl extends BaseDAOimpl<Servicio> implements ServicioDA
 	
 	@Override 
 	public List<Servicio> buscarServiciosDeUsuarioEvento(Usuario usuario, Evento evento) {
-		Query consulta = this.getEntityManager().createQuery("select s from Servicio s INNER JOIN Reserva r ON s.id = r.servicio where r.usuario = :usuario and r.evento = :evento and s.borrado = 0");
+		Query consulta = this.getEntityManager().createQuery("select s from Servicio s INNER JOIN Reserva r  ON s.id = r.servicio INNER JOIN Estado e ON r.estado = e.id where r.usuario = :usuario and r.evento = :evento and e.id = 2 and s.borrado = 0");
 		consulta.setParameter("evento", evento)
 		.setParameter("usuario", usuario);
 		return (List<Servicio>)consulta.getResultList();

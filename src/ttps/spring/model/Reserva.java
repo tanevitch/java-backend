@@ -134,7 +134,8 @@ public class Reserva {
 	public boolean hasInvalidFields() {
 		
 		return email.length() > 255
-			|| telefono.length() > 255;
+			|| telefono.length() > 255
+			|| fechaHora.before(new Date());
 	}
 
 	public Servicio getServicio() {

@@ -1,5 +1,6 @@
 package ttps.spring.DAOImplement;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -28,8 +29,9 @@ public class EventoDAOimpl extends BaseDAOimpl<Evento> implements EventoDAO{
 	}
 	
 	public List<Evento> buscarEventoPorUsuario(Usuario usuario) {
-		Query consulta = this.getEntityManager().createQuery("select e from Evento e WHERE e.usuario = :usuario and e.borrado = 0");
-		consulta.setParameter("usuario", usuario);
+		Query consulta = this.getEntityManager().createQuery("select e from Evento e WHERE e.usuario = :usuario and e.borrado = 0 and e.fechaHora >= :hoy");
+		consulta.setParameter("usuario", usuario)
+		.setParameter("hoy", new Date());
 		return (List<Evento>)consulta.getResultList();
 		
 	}
