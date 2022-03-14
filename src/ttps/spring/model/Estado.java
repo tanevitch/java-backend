@@ -14,6 +14,7 @@ public class Estado {
 	public static final String CONFIRMADA = "CONFIRMADA";
 	public static final String SINCONFIRMAR = "SINCONFIRMAR";
 	public static final String RECHAZADA = "RECHAZADA";
+	public static final String CANCELADA = "CANCELADA";
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import ttps.spring.DAO.EstadoDAO;
 import ttps.spring.model.Estado;
+import ttps.spring.model.Evento;
 import ttps.spring.model.Reserva;
 import ttps.spring.model.Servicio;
 import ttps.spring.model.Usuario;
@@ -77,8 +78,22 @@ public class ReservaRestController {
 			 return new ResponseEntity("Todos los campos son requeridos", HttpStatus.BAD_REQUEST);
 		 }
 		
+		Servicio servicio = servicioService.recuperarPorId(reservaNueva.getServicio().getId());
+		if (servicio == null) {
+			return new ResponseEntity("Servicio con id "+reservaNueva.getServicio().getId()+" no encontrado", HttpStatus.NOT_FOUND);
+		}
+		
+		Evento evento = eventoService.recuperarPorId(reservaNueva.getEvento().getId());
+		if (evento == null) {
+			return new ResponseEntity("Evento con id "+reservaNueva.getEvento().getId()+" no encontrado", HttpStatus.NOT_FOUND);
+		}
+		
 		if (reservaNueva.hasInvalidFields()) {
 			return new ResponseEntity("Campos inválidos", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (reservaNueva.getFechaHora().before(evento.getFechaHora())) {
+			return new ResponseEntity("No se puede reservar para antes de que empiece el evento", HttpStatus.BAD_REQUEST);
 		}
 		
 		ResponseEntity codigoRta =	reservaService.guardar(reservaNueva);
@@ -99,9 +114,16 @@ public class ReservaRestController {
 			return new ResponseEntity("Estado "+nombreEstado+" no encontrado", HttpStatus.NOT_FOUND);
 		}
 		
-		LocalDate.now();
-		if (estado.getNombre().equals(Estado.FINALIZADA) && reserva.getFechaHora().before(Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant()))) {
+		if (reserva.getEstado().getNombre().equals(Estado.RECHAZADA) || reserva.getEstado().getNombre().equals(Estado.FINALIZADA) || reserva.getEstado().getNombre().equals(Estado.CANCELADA)) {
+			return new ResponseEntity("No se puede cambiar el estado de una reserva cancelada, rechazada o finalizada", HttpStatus.BAD_REQUEST);
+		}
+			
+		if (estado.getNombre().equals(Estado.FINALIZADA) && new Date().before(reserva.getFechaHora())) {
 			return new ResponseEntity("No se puede marcar como finalizada una reserva antes de la fecha de la reserva", HttpStatus.BAD_REQUEST);
+		}
+		
+		if (estado.getNombre().equals(Estado.SINCONFIRMAR) && reserva.getEstado().getNombre().equals(Estado.CONFIRMADA)) {
+			return new ResponseEntity("No se puede marcar como sin confirmar una reserva confirmada", HttpStatus.BAD_REQUEST);
 		}
 
 		ResponseEntity codigoRta =	reservaService.cambiarEstado(reserva, estado);
